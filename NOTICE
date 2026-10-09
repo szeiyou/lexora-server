@@ -1,0 +1,11 @@
+Lexora Server
+
+Project source code is licensed under the MIT License (see LICENSE).
+
+The Maven Wrapper scripts (mvnw, mvnw.cmd) and wrapper configuration are
+provided by the Apache Maven project under the Apache License, Version 2.0.
+Their original license headers are preserved. The Apache License is available
+in licenses/Apache-2.0.txt and at https://www.apache.org/licenses/LICENSE-2.0.
+
+Dependencies retain their respective licenses. External LLM and TTS services
+and their generated content are subject to the respective providers' terms.

@@ -1,0 +1,66 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: dicserver-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-change-me}
+      MYSQL_DATABASE: dictionary
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dicserver:
+    build: .
+    container_name: dicserver-app
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/dictionary?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      APP_AUTH_JWT_SECRET: ${APP_AUTH_JWT_SECRET:?APP_AUTH_JWT_SECRET must be set}
+      APP_AUTH_ACCESS_TOKEN_TTL_SECONDS: ${APP_AUTH_ACCESS_TOKEN_TTL_SECONDS:-900}
+      APP_AUTH_REFRESH_TOKEN_TTL_SECONDS: ${APP_AUTH_REFRESH_TOKEN_TTL_SECONDS:-2592000}
+      TENCENT_SECRET_ID: ${TENCENT_SECRET_ID:-}
+      TENCENT_SECRET_KEY: ${TENCENT_SECRET_KEY:-}
+      TENCENT_API_KEY: ${TENCENT_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      BAILIAN_API_KEY: ${BAILIAN_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      MIMO_TTS_BASE_URL: ${MIMO_TTS_BASE_URL:-https://api.xiaomimimo.com/v1}
+      MIMO_TTS_API_KEY: ${MIMO_TTS_API_KEY:-}
+      MIMO_TTS_MODEL: ${MIMO_TTS_MODEL:-mimo-v2.5-tts}
+      MIMO_TTS_VOICE: ${MIMO_TTS_VOICE:-Mia}
+      MIMO_TTS_FORMAT: ${MIMO_TTS_FORMAT:-mp3}
+      RATE_LIMIT_REQUESTS_PER_MINUTE: ${RATE_LIMIT_REQUESTS_PER_MINUTE:-60}
+      CLEANUP_SEARCH_HISTORY_RETENTION_DAYS: ${CLEANUP_SEARCH_HISTORY_RETENTION_DAYS:-90}
+      AUDIO_STORAGE_DIR: /app/audio-data
+      # TTS provider: qwen3 | tencent | mimo
+      TTS_PROVIDER: ${TTS_PROVIDER:-qwen3}
+      TTS_BASE_URL: ${TTS_BASE_URL:-http://host.docker.internal:8000}
+      TTS_API_KEY: ${TTS_API_KEY:-}
+      TTS_SPEAKER: ${TTS_SPEAKER:-vivian}
+      AUDIO_GENERATION_SCHEDULER_WINDOW_START: ${AUDIO_GENERATION_SCHEDULER_WINDOW_START:-00:00}
+      AUDIO_GENERATION_SCHEDULER_WINDOW_END: ${AUDIO_GENERATION_SCHEDULER_WINDOW_END:-02:00}
+      AUDIO_GENERATION_SCHEDULER_TICK_SECONDS: ${AUDIO_GENERATION_SCHEDULER_TICK_SECONDS:-300}
+      AUDIO_GENERATION_SCHEDULER_ZONE_ID: ${AUDIO_GENERATION_SCHEDULER_ZONE_ID:-Asia/Shanghai}
+      # Tencent TTS (optional)
+      TENCENT_TTS_SECRET_ID: ${TENCENT_TTS_SECRET_ID:-}
+      TENCENT_TTS_SECRET_KEY: ${TENCENT_TTS_SECRET_KEY:-}
+      TENCENT_TTS_APP_ID: ${TENCENT_TTS_APP_ID:-}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./config:/app/config:ro
+      - audio-data:/app/audio-data
+
+volumes:
+  mysql-data:
+  audio-data:

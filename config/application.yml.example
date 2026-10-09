@@ -1,0 +1,31 @@
+# Copy this file to application.yml and adjust provider topology as needed.
+# Keep API keys in .env or /etc/dicserver/dicserver.env rather than hardcoding them here.
+#
+# Important:
+# - This example enables DeepSeek only; backup providers are disabled by default.
+# - Each enabled provider must have a non-blank api-key (via env vars), otherwise startup validation will fail.
+# - If you are not using a provider, disable it (enabled: false) or remove it before first startup.
+
+llm:
+  providers:
+    - name: deepseek-main
+      protocol: openai
+      base-url: https://api.deepseek.com/v1/chat/completions
+      api-key: ${DEEPSEEK_API_KEY:}
+      model: deepseek-chat
+      enabled: true
+      priority: 10
+    - name: bailian-backup
+      protocol: openai
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+      api-key: ${BAILIAN_API_KEY:}
+      model: deepseek-v3
+      enabled: false
+      priority: 20
+    - name: tencent-backup
+      protocol: openai
+      base-url: https://api.lkeap.cloud.tencent.com/v1/chat/completions
+      api-key: ${TENCENT_API_KEY:}
+      model: deepseek-v3
+      enabled: false
+      priority: 30

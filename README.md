@@ -7,6 +7,12 @@ AI-powered dictionary, translation and vocabulary learning backend built with Ja
 [![CI](https://github.com/szeiyou/lexora-server/actions/workflows/ci.yml/badge.svg)](https://github.com/szeiyou/lexora-server/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+## 配套客户端
+
+[Lexora](https://github.com/szeiyou/Lexora) 是本项目的配套 Windows 桌面客户端，基于 Tauri v2、React 和 TypeScript 构建，提供词汇查询、文本翻译、历史记录和单词本功能。
+
+部署本服务后，在客户端“设置”页填写完整的服务地址（例如 `http://localhost:8080`，适用于客户端与服务端运行在同一台机器上），然后注册或登录账号即可使用。客户端安装、开发与打包说明见 [Lexora 仓库](https://github.com/szeiyou/Lexora)。
+
 ## 功能
 
 - 英文单词释义、例句、词源扩展，汉译英词语和句子互译。
